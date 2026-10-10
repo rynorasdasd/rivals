@@ -1,3 +1,7 @@
+--[================================================================]--
+--  OSMANTUS.CHEAT | BLOX STRIKE TEAM-CHECKED EDITION (v2.1)
+--[================================================================]--
+
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -10,167 +14,209 @@ local camera = Workspace.CurrentCamera
 
 repeat task.wait() until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 
+-- Durum Değişkenleri
 local menuOpen = false
 local espEnabled = false
 local aimbotEnabled = false
 local speedEnabled = false
 local noclipEnabled = false
-local antiKatanaEnabled = false
+local weaponGlowEnabled = false
 
-if playerGui:FindFirstChild("PremiumDevMenu") then
-	playerGui.PremiumDevMenu:Destroy()
+-- Eski Menüyü Temizle
+if playerGui:FindFirstChild("OsmantusCheatGui") then
+	playerGui.OsmantusCheatGui:Destroy()
 end
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "PremiumDevMenu"
+screenGui.Name = "OsmantusCheatGui"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
+-- Ana Pencere
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 280, 0, 400)
-mainFrame.Position = UDim2.new(0.5, -140, 0.5, -200)
-mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-mainFrame.BackgroundTransparency = 0.1
+mainFrame.Size = UDim2.new(0, 480, 0, 340)
+mainFrame.Position = UDim2.new(0.5, -240, 0.5, -170)
+mainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
 mainFrame.BorderSizePixel = 0
 mainFrame.Visible = false
 mainFrame.Parent = screenGui
 
 local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 12)
+mainCorner.CornerRadius = UDim.new(0, 8)
 mainCorner.Parent = mainFrame
 
 local mainStroke = Instance.new("UIStroke")
-mainStroke.Color = Color3.fromRGB(50, 50, 70)
+mainStroke.Color = Color3.fromRGB(110, 60, 255)
 mainStroke.Thickness = 1.5
 mainStroke.Parent = mainFrame
 
-local titleBar = Instance.new("Frame")
-titleBar.Size = UDim2.new(1, 0, 0, 45)
-titleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-titleBar.BorderSizePixel = 0
-titleBar.Parent = mainFrame
+-- Sol Menü Paneli
+local sidebar = Instance.new("Frame")
+sidebar.Size = UDim2.new(0, 130, 1, 0)
+sidebar.BackgroundColor3 = Color3.fromRGB(14, 14, 19)
+sidebar.BorderSizePixel = 0
+sidebar.Parent = mainFrame
 
-local titleCorner = Instance.new("UICorner")
-titleCorner.CornerRadius = UDim.new(0, 12)
-titleCorner.Parent = titleBar
+local sideCorner = Instance.new("UICorner")
+sideCorner.CornerRadius = UDim.new(0, 8)
+sideCorner.Parent = sidebar
 
-local fixFrame = Instance.new("Frame")
-fixFrame.Size = UDim2.new(1, 0, 0, 10)
-fixFrame.Position = UDim2.new(0, 0, 1, -10)
-fixFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-fixFrame.BorderSizePixel = 0
-fixFrame.Parent = titleBar
+local logoText = Instance.new("TextLabel")
+logoText.Size = UDim2.new(1, 0, 0, 50)
+logoText.BackgroundTransparency = 1
+logoText.Text = "OSMANTUS"
+logoText.TextColor3 = Color3.fromRGB(180, 130, 255)
+logoText.TextSize = 15
+logoText.Font = Enum.Font.GothamBold
+logoText.Parent = sidebar
 
-local titleText = Instance.new("TextLabel")
-titleText.Size = UDim2.new(1, -20, 1, 0)
-titleText.Position = UDim2.new(0, 15, 0, 0)
-titleText.BackgroundTransparency = 1
-titleText.Text = "⚡ RIVALS GELİŞTİRİCİ PANELİ"
-titleText.TextColor3 = Color3.fromRGB(240, 240, 255)
-titleText.TextSize = 14
-titleText.Font = Enum.Font.GothamBold
-titleText.TextXAlignment = Enum.TextXAlignment.Left
-titleText.Parent = titleBar
+local subLogo = Instance.new("TextLabel")
+subLogo.Size = UDim2.new(1, 0, 0, 20)
+subLogo.Position = UDim2.new(0, 0, 0, 25)
+subLogo.BackgroundTransparency = 1
+subLogo.Text = ".cheat [Team Check]"
+subLogo.TextColor3 = Color3.fromRGB(120, 120, 150)
+subLogo.TextSize = 10
+subLogo.Font = Enum.Font.GothamMedium
+subLogo.Parent = sidebar
 
-local subtitleText = Instance.new("TextLabel")
-subtitleText.Size = UDim2.new(1, -20, 1, 0)
-subtitleText.Position = UDim2.new(0, 15, 0, 14)
-subtitleText.BackgroundTransparency = 1
-subtitleText.Text = "[ M ] İle Aç / Kapat"
-subtitleText.TextColor3 = Color3.fromRGB(130, 130, 160)
-subtitleText.TextSize = 11
-subtitleText.Font = Enum.Font.GothamMedium
-subtitleText.TextXAlignment = Enum.TextXAlignment.Left
-subtitleText.Parent = titleBar
+-- Sağ İçerik Alanı
+local contentArea = Instance.new("Frame")
+contentArea.Size = UDim2.new(1, -140, 1, -15)
+contentArea.Position = UDim2.new(0, 135, 0, 10)
+contentArea.BackgroundTransparency = 1
+contentArea.Parent = mainFrame
 
-local function createButton(text, posY)
+local combatTab = Instance.new("ScrollingFrame")
+combatTab.Size = UDim2.new(1, 0, 1, 0)
+combatTab.BackgroundTransparency = 1
+combatTab.BorderSizePixel = 0
+combatTab.CanvasSize = UDim2.new(0, 0, 0, 250)
+combatTab.ScrollBarThickness = 3
+combatTab.Visible = true
+combatTab.Parent = contentArea
+
+local visualTab = Instance.new("ScrollingFrame")
+visualTab.Size = UDim2.new(1, 0, 1, 0)
+visualTab.BackgroundTransparency = 1
+visualTab.BorderSizePixel = 0
+visualTab.CanvasSize = UDim2.new(0, 0, 0, 250)
+visualTab.ScrollBarThickness = 3
+visualTab.Visible = false
+visualTab.Parent = contentArea
+
+local function createTabButton(text, posY, targetTab)
 	local btn = Instance.new("TextButton")
-	btn.Size = UDim2.new(0.9, 0, 0, 48)
+	btn.Size = UDim2.new(0.9, 0, 0, 35)
 	btn.Position = UDim2.new(0.05, 0, 0, posY)
-	btn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+	btn.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
 	btn.BorderSizePixel = 0
-	btn.AutoButtonColor = false
-	btn.Text = ""
-	btn.ZIndex = 10
-	btn.Parent = mainFrame
+	btn.Text = text
+	btn.TextColor3 = Color3.fromRGB(180, 180, 200)
+	btn.TextSize = 12
+	btn.Font = Enum.Font.GothamSemibold
+	btn.Parent = sidebar
 	
 	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0, 8)
+	corner.CornerRadius = UDim.new(0, 6)
 	corner.Parent = btn
 	
+	btn.MouseButton1Click:Connect(function()
+		combatTab.Visible = false
+		visualTab.Visible = false
+		targetTab.Visible = true
+	end)
+end
+
+createTabButton("Combat", 70, combatTab)
+createTabButton("Visuals & Misc", 110, visualTab)
+
+local function createToggle(parentContainer, text, posY, callback)
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(1, -10, 0, 40)
+	frame.Position = UDim2.new(0, 0, 0, posY)
+	frame.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
+	frame.BorderSizePixel = 0
+	frame.Parent = parentContainer
+	
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 6)
+	corner.Parent = frame
+	
 	local label = Instance.new("TextLabel")
-	label.Size = UDim2.new(1, -20, 1, 0)
-	label.Position = UDim2.new(0, 15, 0, 0)
+	label.Size = UDim2.new(0.7, 0, 1, 0)
+	label.Position = UDim2.new(0, 12, 0, 0)
 	label.BackgroundTransparency = 1
 	label.Text = text
-	label.TextColor3 = Color3.fromRGB(200, 200, 220)
-	label.TextSize = 13
-	label.Font = Enum.Font.GothamSemibold
+	label.TextColor3 = Color3.fromRGB(210, 210, 230)
+	label.TextSize = 12
+	label.Font = Enum.Font.GothamMedium
 	label.TextXAlignment = Enum.TextXAlignment.Left
-	label.ZIndex = 11
-	label.Parent = btn
+	label.Parent = frame
 	
-	local indicator = Instance.new("Frame")
-	indicator.Size = UDim2.new(0, 8, 0, 8)
-	indicator.Position = UDim2.new(1, -20, 0.5, -4)
-	indicator.BackgroundColor3 = Color3.fromRGB(100, 100, 120)
-	indicator.BorderSizePixel = 0
-	indicator.ZIndex = 11
-	indicator.Parent = btn
+	local toggleBtn = Instance.new("TextButton")
+	toggleBtn.Size = UDim2.new(0, 38, 0, 20)
+	toggleBtn.Position = UDim2.new(1, -48, 0.5, -10)
+	toggleBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 60)
+	toggleBtn.BorderSizePixel = 0
+	toggleBtn.Text = ""
+	toggleBtn.Parent = frame
 	
-	local indCorner = Instance.new("UICorner")
-	indCorner.CornerRadius = UDim.new(1, 0)
-	indCorner.Parent = indicator
+	local btnCorner = Instance.new("UICorner")
+	btnCorner.CornerRadius = UDim.new(1, 0)
+	btnCorner.Parent = toggleBtn
 	
-	btn.MouseEnter:Connect(function()
-		TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(45, 45, 60)}):Play()
-	end)
+	local circle = Instance.new("Frame")
+	circle.Size = UDim2.new(0, 14, 0, 14)
+	circle.Position = UDim2.new(0, 3, 0.5, -7)
+	circle.BackgroundColor3 = Color3.fromRGB(180, 180, 200)
+	circle.BorderSizePixel = 0
+	circle.Parent = toggleBtn
 	
-	btn.MouseLeave:Connect(function()
-		TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35, 35, 45)}):Play()
-	end)
+	local circleCorner = Instance.new("UICorner")
+	circleCorner.CornerRadius = UDim.new(1, 0)
+	circleCorner.Parent = circle
 	
-	return btn, label, indicator
-end
-
-local espBtn, espLabel, espInd = createButton("ESP (Duvar Görme)", 60)
-local aimbotBtn, aimbotLabel, aimbotInd = createButton("Aimbot (Hard-Lock Kafa)", 120)
-local speedBtn, speedLabel, speedInd = createButton("Hızlı Koşma (60 WalkSpeed)", 180)
-local noclipBtn, noclipLabel, noclipInd = createButton("Noclip (Duvardan Geçme)", 240)
-local katanaBtn, katanaLabel, katanaInd = createButton("Anti-Katana (Kalkan Delme)", 300)
-
-local function setButtonState(isOn, label, indicator)
-	if isOn then
-		label.TextColor3 = Color3.fromRGB(0, 255, 128)
-		indicator.BackgroundColor3 = Color3.fromRGB(0, 255, 128)
-	else
-		label.TextColor3 = Color3.fromRGB(200, 200, 220)
-		indicator.BackgroundColor3 = Color3.fromRGB(100, 100, 120)
-	end
-end
-
-UserInputService.InputBegan:Connect(function(input, gp)
-	if input.KeyCode == Enum.KeyCode.M then
-		menuOpen = not menuOpen
-		
-		if menuOpen then
-			mainFrame.Visible = true
-			mainFrame.Size = UDim2.new(0, 260, 0, 370)
-			mainFrame.BackgroundTransparency = 1
-			TweenService:Create(mainFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Size = UDim2.new(0, 280, 0, 400),
-				BackgroundTransparency = 0.1
-			}):Play()
+	local isOn = false
+	toggleBtn.MouseButton1Click:Connect(function()
+		isOn = not isOn
+		if isOn then
+			TweenService:Create(toggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(110, 60, 255)}):Play()
+			TweenService:Create(circle, TweenInfo.new(0.2), {Position = UDim2.new(1, -17, 0.5, -7), BackgroundColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 		else
-			local tween = TweenService:Create(mainFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-				Size = UDim2.new(0, 260, 0, 370),
-				BackgroundTransparency = 1
-			})
-			tween:Play()
-			tween.Completed:Connect(function()
-				if not menuOpen then mainFrame.Visible = false end
-			end)
+			TweenService:Create(toggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(45, 45, 60)}):Play()
+			TweenService:Create(circle, TweenInfo.new(0.2), {Position = UDim2.new(0, 3, 0.5, -7), BackgroundColor3 = Color3.fromRGB(180, 180, 200)}):Play()
 		end
+		callback(isOn)
+	end)
+end
+
+-- Butonlar
+createToggle(combatTab, "Aimbot (Enemies Only)", 5, function(state)
+	aimbotEnabled = state
+end)
+
+createToggle(visualTab, "Player ESP (Enemies Only)", 5, function(state)
+	espEnabled = state
+end)
+
+createToggle(visualTab, "Speed Hack (Fast Move)", 50, function(state)
+	speedEnabled = state
+end)
+
+createToggle(visualTab, "Noclip (Duvardan Geçme)", 95, function(state)
+	noclipEnabled = state
+end)
+
+createToggle(visualTab, "Weapon Neon Glow", 140, function(state)
+	weaponGlowEnabled = state
+end)
+
+-- Menü Açma / Kapama (RightShift Tuşu)
+UserInputService.InputBegan:Connect(function(input, gp)
+	if input.KeyCode == Enum.KeyCode.RightShift then
+		menuOpen = not menuOpen
+		mainFrame.Visible = menuOpen
 	end
 end)
 
@@ -181,12 +227,81 @@ RunService.RenderStepped:Connect(function()
 	end
 end)
 
--- 1. ESP Sistemi
+-- Takım Kontrol Fonksiyonu (Aynı takımdakileri elemek için)
+local function isEnemy(p)
+	if p == player then return false end
+	if p.Team and player.Team and p.Team == player.Team then
+		return false
+	end
+	return true
+end
+
+-- ARKAPLAN İŞLEVLERİ
+
+-- 1. ESP (Sadece Rakipleri Gösterme)
 local espCache = {}
-espBtn.MouseButton1Click:Connect(function()
-	espEnabled = not espEnabled
-	setButtonState(espEnabled, espLabel, espInd)
-	if not espEnabled then
+RunService.RenderStepped:Connect(function()
+	if espEnabled then
+		for _, p in pairs(Players:GetPlayers()) do
+			if isEnemy(p) and p.Character then
+				local char = p.Character
+				local hrp = char:FindFirstChild("HumanoidRootPart")
+				local humanoid = char:FindFirstChildOfClass("Humanoid")
+				
+				local oldHl = char:FindFirstChildOfClass("Highlight")
+				if oldHl then oldHl:Destroy() end
+				
+				if hrp and not char:FindFirstChild("OsmantusRedBox") then
+					local box = Instance.new("BoxHandleAdornment")
+					box.Name = "OsmantusRedBox"
+					box.Size = Vector3.new(2.5, 4.5, 1.5)
+					box.Adornee = hrp
+					box.AlwaysOnTop = true
+					box.ZIndex = 5
+					box.Transparency = 0.9
+					box.Color3 = Color3.fromRGB(255, 30, 30)
+					box.Parent = char
+					table.insert(espCache, box)
+				end
+				
+				if hrp and not char:FindFirstChild("OsmantusVerticalBar") and humanoid then
+					local billboard = Instance.new("BillboardGui")
+					billboard.Name = "OsmantusVerticalBar"
+					billboard.Size = UDim2.new(0, 3, 0, 50)
+					billboard.StudsOffset = Vector3.new(-1.8, 0, 0)
+					billboard.AlwaysOnTop = true
+					billboard.Adornee = hrp
+					
+					local bgLine = Instance.new("Frame")
+					bgLine.Name = "BGLine"
+					bgLine.Size = UDim2.new(1, 0, 1, 0)
+					bgLine.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+					bgLine.BorderSizePixel = 0
+					bgLine.Parent = billboard
+					
+					local fillLine = Instance.new("Frame")
+					fillLine.Name = "FillLine"
+					fillLine.Size = UDim2.new(1, 0, 1, 0)
+					fillLine.BackgroundColor3 = Color3.fromRGB(0, 255, 80)
+					fillLine.BorderSizePixel = 0
+					fillLine.Parent = bgLine
+					
+					billboard.Parent = char
+					table.insert(espCache, billboard)
+				end
+				
+				local barGui = char:FindFirstChild("OsmantusVerticalBar")
+				if barGui and humanoid then
+					local fill = barGui:FindFirstChild("BGLine"):FindFirstChild("FillLine")
+					if fill then
+						local healthPercent = math.clamp(humanoid.Health / humanoid.MaxHealth, 0, 1)
+						fill.Size = UDim2.new(1, 0, healthPercent, 0)
+						fill.Position = UDim2.new(0, 0, 1 - healthPercent, 0)
+					end
+				end
+			end
+		end
+	else
 		for _, item in pairs(espCache) do
 			if item then item:Destroy() end
 		end
@@ -194,61 +309,19 @@ espBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
-RunService.RenderStepped:Connect(function()
-	if espEnabled then
-		for _, p in pairs(Players:GetPlayers()) do
-			if p ~= player and p.Character then
-				local char = p.Character
-				local hrp = char:FindFirstChild("HumanoidRootPart")
-				
-				if hrp and not char:FindFirstChild("DevHighlight") then
-					local hl = Instance.new("Highlight")
-					hl.Name = "DevHighlight"
-					hl.Adornee = char
-					hl.FillColor = Color3.fromRGB(255, 50, 50)
-					hl.OutlineColor = Color3.fromRGB(255, 255, 255)
-					hl.FillTransparency = 0.4
-					hl.Parent = char
-					table.insert(espCache, hl)
-				end
-				
-				if hrp and not char:FindFirstChild("DevBoxESP") then
-					local box = Instance.new("BoxHandleAdornment")
-					box.Name = "DevBoxESP"
-					box.Size = Vector3.new(3, 6, 2)
-					box.Adornee = hrp
-					box.AlwaysOnTop = true
-					box.ZIndex = 5
-					box.Transparency = 0.5
-					box.Color3 = Color3.fromRGB(255, 50, 50)
-					box.Parent = char
-					table.insert(espCache, box)
-				end
-			end
-		end
-	end
-end)
-
--- 2. Aimbot Sistemi
-aimbotBtn.MouseButton1Click:Connect(function()
-	aimbotEnabled = not aimbotEnabled
-	setButtonState(aimbotEnabled, aimbotLabel, aimbotInd)
-end)
-
+-- 2. Aimbot (Sadece Rakiplere Kilitlenme)
 RunService.RenderStepped:Connect(function()
 	if aimbotEnabled and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) then
 		local closestHead = nil
 		local shortestDist = math.huge
-		
 		for _, p in pairs(Players:GetPlayers()) do
-			if p ~= player and p.Character and p.Character:FindFirstChild("Head") then
+			if isEnemy(p) and p.Character and p.Character:FindFirstChild("Head") then
 				local humanoid = p.Character:FindFirstChildOfClass("Humanoid")
 				if humanoid and humanoid.Health > 0 then
 					local head = p.Character.Head
 					local screenPoint, onScreen = camera:WorldToViewportPoint(head.Position)
 					local mousePos = UserInputService:GetMouseLocation()
 					local dist = (Vector2.new(screenPoint.X, screenPoint.Y) - mousePos).Magnitude
-					
 					if dist < shortestDist then
 						shortestDist = dist
 						closestHead = head
@@ -256,65 +329,45 @@ RunService.RenderStepped:Connect(function()
 				end
 			end
 		end
-		
 		if closestHead then
 			camera.CFrame = CFrame.lookAt(camera.CFrame.Position, closestHead.Position)
 		end
 	end
 end)
 
--- 3. Hızlı Koşma
-speedBtn.MouseButton1Click:Connect(function()
-	speedEnabled = not speedEnabled
-	setButtonState(speedEnabled, speedLabel, speedInd)
-	if not speedEnabled and player.Character then
-		local hum = player.Character:FindFirstChildOfClass("Humanoid")
-		if hum then hum.WalkSpeed = 16 end
-	end
-end)
-
+-- 3. Speed Hack
 RunService.RenderStepped:Connect(function()
 	if speedEnabled and player.Character then
 		local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-		if humanoid then
-			humanoid.WalkSpeed = 60
-		end
-	end
-end)
-
--- 4. Noclip
-noclipBtn.MouseButton1Click:Connect(function()
-	noclipEnabled = not noclipEnabled
-	setButtonState(noclipEnabled, noclipLabel, noclipInd)
-end)
-
-RunService.Stepped:Connect(function()
-	if noclipEnabled and player.Character then
-		for _, part in pairs(player.Character:GetDescendants()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = false
+		local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+		if humanoid and hrp then
+			humanoid.WalkSpeed = 16
+			if humanoid.MoveDirection.Magnitude > 0 then
+				hrp.CFrame = hrp.CFrame + (humanoid.MoveDirection * 1.25)
 			end
 		end
 	end
 end)
 
--- 5. Anti-Katana
-katanaBtn.MouseButton1Click:Connect(function()
-	antiKatanaEnabled = not antiKatanaEnabled
-	setButtonState(antiKatanaEnabled, katanaLabel, katanaInd)
+-- 4. Noclip
+RunService.Stepped:Connect(function()
+	if noclipEnabled and player.Character then
+		for _, part in pairs(player.Character:GetDescendants()) do
+			if part:IsA("BasePart") then part.CanCollide = false end
+		end
+	end
 end)
 
+-- 5. Weapon Glow
 RunService.RenderStepped:Connect(function()
-	if antiKatanaEnabled then
-		for _, p in pairs(Players:GetPlayers()) do
-			if p ~= player and p.Character then
-				local shield1 = p.Character:FindFirstChild("KatanaBlock")
-				local shield2 = p.Character:FindFirstChild("KatanaShield")
-				local shield3 = p.Character:FindFirstChild("Deflect")
-				
-				if shield1 then shield1:Destroy() end
-				if shield2 then shield2:Destroy() end
-				if shield3 then shield3:Destroy() end
+	if weaponGlowEnabled then
+		for _, obj in pairs(camera:GetDescendants()) do
+			if obj:IsA("MeshPart") or obj:IsA("Part") then
+				local name = obj.Name:lower()
+				if name ~= "head" and name ~= "humanoidrootpart" then
+					obj.Material = Enum.Material.Neon
+					obj.Color = Color3.fromRGB(180, 130, 255)
+				end
 			end
 		end
 	end
